@@ -96,6 +96,7 @@ def lambda_handler(event, context):
 def invoke_bedrock(query):
     """
     Invoke Amazon Bedrock with the given query.
+    Supports both Anthropic models and other models using Converse API.
 
     Args:
         query (str): The user's query
@@ -104,33 +105,59 @@ def invoke_bedrock(query):
         str: The model's response
     """
 
-    # Prepare the request body for Claude models
-    request_body = {
-        "anthropic_version": "bedrock-2023-05-31",
-        "max_tokens": 1000,
-        "messages": [
-            {
-                "role": "user",
-                "content": query
-            }
-        ]
-    }
-
     try:
-        # Invoke the model
-        response = bedrock_runtime.invoke_model(
-            modelId=MODEL_ID,
-            body=json.dumps(request_body)
-        )
+        # Check if it's an Anthropic model
+        if 'anthropic' in MODEL_ID.lower():
+            # Use Anthropic-specific API
+            request_body = {
+                "anthropic_version": "bedrock-2023-05-31",
+                "max_tokens": 1000,
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": query
+                    }
+                ]
+            }
 
-        # Parse the response
-        response_body = json.loads(response['body'].read())
+            response = bedrock_runtime.invoke_model(
+                modelId=MODEL_ID,
+                body=json.dumps(request_body)
+            )
 
-        # Extract the text from Claude's response
-        if 'content' in response_body and len(response_body['content']) > 0:
-            return response_body['content'][0]['text']
+            response_body = json.loads(response['body'].read())
+
+            # Extract text from Anthropic response
+            if 'content' in response_body and len(response_body['content']) > 0:
+                return response_body['content'][0]['text']
+            else:
+                return "No response generated"
+
         else:
-            return "No response generated"
+            # Use Converse API for non-Anthropic models (Amazon Nova, etc.)
+            response = bedrock_runtime.converse(
+                modelId=MODEL_ID,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "text": query
+                            }
+                        ]
+                    }
+                ],
+                inferenceConfig={
+                    "maxTokens": 1000,
+                    "temperature": 0.7
+                }
+            )
+
+            # Extract text from Converse API response
+            if 'output' in response and 'message' in response['output']:
+                return response['output']['message']['content'][0]['text']
+            else:
+                return "No response generated"
 
     except ClientError as e:
         error_code = e.response['Error']['Code']

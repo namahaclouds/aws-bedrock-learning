@@ -100,7 +100,7 @@ export default function ChatInterface() {
                 />
               </svg>
               <p className="text-lg">Start a conversation with AWS Bedrock</p>
-              <p className="text-sm mt-2">Try asking: "What is Amazon Web Services?"</p>
+              <p className="text-sm mt-2">Try asking: &ldquo;What is Amazon Web Services?&rdquo;</p>
             </div>
           </div>
         ) : (

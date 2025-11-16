@@ -127,16 +127,14 @@ resource "aws_api_gateway_stage" "api_stage" {
   }
 }
 
-# Enable CloudWatch logging for API Gateway
+# Enable CloudWatch metrics for API Gateway (logging disabled - requires account-level setup)
 resource "aws_api_gateway_method_settings" "general_settings" {
   rest_api_id = aws_api_gateway_rest_api.bedrock_api.id
   stage_name  = aws_api_gateway_stage.api_stage.stage_name
   method_path = "*/*"
 
   settings {
-    logging_level      = "INFO"
-    data_trace_enabled = true
-    metrics_enabled    = true
+    metrics_enabled = true
   }
 }
 

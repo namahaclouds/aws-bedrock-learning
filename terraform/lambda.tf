@@ -22,7 +22,6 @@ resource "aws_lambda_function" "bedrock_query" {
   environment {
     variables = {
       BEDROCK_MODEL_ID = var.bedrock_model_id
-      AWS_REGION       = var.aws_region
     }
   }
 

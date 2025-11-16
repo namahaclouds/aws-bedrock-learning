@@ -27,6 +27,7 @@ wheels/
 *.tfstate
 *.tfstate.*
 .terraform.lock.hcl
+terraform.tfvars
 crash.log
 override.tf
 override.tf.json
@@ -42,6 +43,8 @@ yarn-error.log*
 .next/
 out/
 build/
+next-env.d.ts
+*.zip
 
 # IDE
 .vscode/
