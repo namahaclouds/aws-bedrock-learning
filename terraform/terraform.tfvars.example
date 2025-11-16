@@ -1,0 +1,44 @@
+# Example Terraform Variables
+# Copy this file to terraform.tfvars and update with your values
+
+# AWS Region where resources will be created
+# Bedrock is available in: us-east-1, us-west-2, ap-southeast-1, etc.
+aws_region = "us-east-1"
+
+# Project name (used for resource naming)
+project_name = "bedrock-learning"
+
+# Environment (dev, staging, prod)
+environment = "dev"
+
+# Bedrock model to use
+# Options:
+#   - anthropic.claude-3-haiku-20240307-v1:0 (fast, cheap)
+#   - anthropic.claude-3-sonnet-20240229-v1:0 (balanced)
+#   - anthropic.claude-3-opus-20240229-v1:0 (most capable)
+bedrock_model_id = "anthropic.claude-3-haiku-20240307-v1:0"
+
+# Lambda configuration
+lambda_timeout = 30
+lambda_memory  = 512
+
+# Custom domain from GoDaddy (optional)
+# Leave empty if you don't want to use a custom domain
+domain_name = ""  # e.g., "example.com"
+
+# GitHub repository for Amplify (optional)
+# Leave empty for manual deployment
+github_repo_url = ""  # e.g., "https://github.com/username/repo"
+
+# GitHub access token (optional, required if using GitHub repo)
+# Create at: https://github.com/settings/tokens
+# Needs: repo, admin:repo_hook
+github_access_token = ""
+
+# Additional tags
+tags = {
+  Project     = "BedrockLearning"
+  ManagedBy   = "Terraform"
+  Environment = "dev"
+  Owner       = "Prakasam Nampoothiripad"
+}
